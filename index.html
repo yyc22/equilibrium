@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Chatelier's Principle Interactive Simulation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Le Chatelier's Principle</h1>
+            <h2>Interactive Simulation for Chemistry Students</h2>
+        </header>
+
+        <div class="simulation-container">
+            <!-- Main simulation area with tabs for different demonstrations -->
+            <div class="tabs">
+                <button class="tab-button active" data-tab="concentration">Concentration</button>
+                <button class="tab-button" data-tab="temperature">Temperature</button>
+                <button class="tab-button" data-tab="pressure">Pressure</button>
+                <button class="tab-button" data-tab="catalyst">Catalyst</button>
+            </div>
+
+            <div class="simulation-area">
+                <!-- Molecular visualization area -->
+                <div class="visualization">
+                    <div class="reaction-vessel">
+                        <canvas id="simulation-canvas" width="600" height="300"></canvas>
+                    </div>
+                    
+                    <div class="reaction-equation">
+                        <span class="reactants">A + B</span>
+                        <span class="equilibrium-arrow">⇌</span>
+                        <span class="products">C + heat</span>
+                    </div>
+                </div>
+
+                <!-- Control panel for user interactions -->
+                <div class="control-panel">
+                    <div class="tab-content active" id="concentration-controls">
+                        <h3>Concentration Controls</h3>
+                        <div class="control-group">
+                            <label for="concentration-a">Reactant A:</label>
+                            <button class="control-button" id="add-a">+</button>
+                            <button class="control-button" id="remove-a">-</button>
+                            <div class="concentration-bar">
+                                <div class="concentration-level" id="level-a"></div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label for="concentration-b">Reactant B:</label>
+                            <button class="control-button" id="add-b">+</button>
+                            <button class="control-button" id="remove-b">-</button>
+                            <div class="concentration-bar">
+                                <div class="concentration-level" id="level-b"></div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label for="concentration-c">Product C:</label>
+                            <button class="control-button" id="add-c">+</button>
+                            <button class="control-button" id="remove-c">-</button>
+                            <div class="concentration-bar">
+                                <div class="concentration-level" id="level-c"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="temperature-controls">
+                        <h3>Temperature Controls</h3>
+                        <div class="control-group">
+                            <label for="temperature-slider">Temperature:</label>
+                            <input type="range" id="temperature-slider" min="0" max="100" value="50">
+                            <div class="temperature-display">
+                                <span id="temperature-value">25°C</span>
+                            </div>
+                        </div>
+                        <div class="reaction-info">
+                            <p>This is an <strong>exothermic</strong> reaction (releases heat).</p>
+                            <p>According to Le Chatelier's Principle:</p>
+                            <ul>
+                                <li>Increasing temperature shifts equilibrium to the left</li>
+                                <li>Decreasing temperature shifts equilibrium to the right</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="pressure-controls">
+                        <h3>Pressure Controls</h3>
+                        <div class="control-group">
+                            <label for="pressure-slider">Pressure:</label>
+                            <input type="range" id="pressure-slider" min="0" max="100" value="50">
+                            <div class="pressure-display">
+                                <span id="pressure-value">1.0 atm</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label>Add inert gas:</label>
+                            <button class="control-button" id="add-inert">Add</button>
+                        </div>
+                        <div class="reaction-info">
+                            <p>Gas reaction: A(g) + 2B(g) ⇌ C(g) + D(g)</p>
+                            <p>3 moles of gas on left, 2 moles on right</p>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="catalyst-controls">
+                        <h3>Catalyst Controls</h3>
+                        <div class="control-group">
+                            <label>Catalyst:</label>
+                            <button class="toggle-button" id="catalyst-toggle">Add Catalyst</button>
+                        </div>
+                        <div class="reaction-info">
+                            <p>A catalyst affects:</p>
+                            <ul>
+                                <li>Reaction rate (speeds up)</li>
+                                <li>Activation energy (lowers)</li>
+                            </ul>
+                            <p>A catalyst does NOT affect:</p>
+                            <ul>
+                                <li>Equilibrium position</li>
+                                <li>Equilibrium constant (K)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="global-controls">
+                        <button id="reset-button">Reset Simulation</button>
+                        <div class="speed-control">
+                            <label for="speed-slider">Animation Speed:</label>
+                            <input type="range" id="speed-slider" min="1" max="5" value="3">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data display area -->
+            <div class="data-display">
+                <div class="concentration-data">
+                    <h3>Concentration Data</h3>
+                    <table>
+                        <tr>
+                            <th>Species</th>
+                            <th>Concentration (M)</th>
+                        </tr>
+                        <tr>
+                            <td>A</td>
+                            <td id="conc-a">1.00</td>
+                        </tr>
+                        <tr>
+                            <td>B</td>
+                            <td id="conc-b">1.00</td>
+                        </tr>
+                        <tr>
+                            <td>C</td>
+                            <td id="conc-c">1.00</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="equilibrium-data">
+                    <h3>Equilibrium Data</h3>
+                    <p>Equilibrium Constant (K): <span id="k-value">1.00</span></p>
+                    <p>Reaction Quotient (Q): <span id="q-value">1.00</span></p>
+                    <p>Direction of Shift: <span id="shift-direction">None</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Explanation panel -->
+        <div class="explanation-panel">
+            <h3>Le Chatelier's Principle Explanation</h3>
+            <div id="explanation-text">
+                <p>Le Chatelier's principle states that if a dynamic equilibrium is disturbed by changing the conditions, the position of equilibrium shifts to counteract the change.</p>
+                <p>Use the controls above to see how changes in concentration, temperature, pressure, and catalysts affect the equilibrium position.</p>
+            </div>
+        </div>
+
+        <!-- Challenge mode section -->
+        <div class="challenge-section">
+            <h3>Challenge Mode</h3>
+            <button id="challenge-button">Start Challenge</button>
+            <div id="challenge-description" class="hidden">
+                <p>Predict what will happen to the equilibrium when conditions change.</p>
+            </div>
+            <div id="challenge-question" class="hidden"></div>
+            <div id="challenge-options" class="hidden"></div>
+            <div id="challenge-feedback" class="hidden"></div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Le Chatelier's Principle Interactive Simulation for High School Chemistry</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
